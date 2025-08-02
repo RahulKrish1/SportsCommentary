@@ -2,8 +2,8 @@ import streamlit as st
 import openai
 import os
 
-# Initialize OpenAI client
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+# Set OpenAI API key (use Streamlit secrets in deployed app)
+openai.api_key = os.getenv("OPENAI_API_KEY")  # locally, or use st.secrets["OPENAI_API_KEY"] on Streamlit Cloud
 
 def generate_commentary(play_text):
     prompt = f"""Convert the following boring sports play into exciting, human-like commentary.
@@ -11,7 +11,7 @@ def generate_commentary(play_text):
 Boring: {play_text}
 Exciting:"""
 
-    response = client.chat.completions.create(
+    response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=[{"role": "user", "content": prompt}],
         temperature=0.9,
