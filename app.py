@@ -1,9 +1,7 @@
+from openai import OpenAI
 import streamlit as st
-import openai
-import os
 
-# Set OpenAI API key (use Streamlit secrets in deployed app)
-openai.api_key = os.getenv("OPENAI_API_KEY")  # locally, or use st.secrets["OPENAI_API_KEY"] on Streamlit Cloud
+client = OpenAI()
 
 def generate_commentary(play_text):
     prompt = f"""Convert the following boring sports play into exciting, human-like commentary.
@@ -11,7 +9,7 @@ def generate_commentary(play_text):
 Boring: {play_text}
 Exciting:"""
 
-    response = openai.ChatCompletion.create(
+    response = client.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[{"role": "user", "content": prompt}],
         temperature=0.9,
@@ -21,10 +19,8 @@ Exciting:"""
 
 st.title("🏀 Sports Commentary Generator")
 
-# Input text box for user play description
 play_input = st.text_area("Enter a sports play description:", height=100)
 
-# Generate button
 if st.button("Generate Commentary"):
     if play_input.strip() == "":
         st.warning("Please enter a play description first!")
